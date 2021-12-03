@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
@@ -36,32 +37,33 @@ class WordGuessing : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         addGuessWords()
         addSpinWords()
-        var guessWordCurrent: String = guessWords[(0 until (guessWords.size-1)).random()]
+        var guessWordCurrent: String = guessWords[(0 until (guessWords.size - 1)).random()]
 
-        Log.d("PreSpace",guessWordCurrent)
+        Log.d("PreSpace", guessWordCurrent)
         guessWordCurrent = guessWordsAddSpace(guessWordCurrent)
         textview_GuessWord.text = guessWordCurrent
 
         val p1 = Player("player")
-        var livesText = "Current lives: " +p1.lives.toString()
-        textview_lives.text = livesText
-
-
-
-
+        updateLivesText(p1)
 
 
         val spannable = SpannableStringBuilder(guessWordCurrent)
 
 
-
         // https://developer.android.com/guide/topics/text/spans documentation on spans
-        guessWordCurrent.forEachIndexed { index, c -> (
-                if (c.compareTo(' ')!= 0){
-                    spannable.setSpan(BackgroundColorSpan(Color.BLACK), index, index+1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+        guessWordCurrent.forEachIndexed { index, c ->
+            (
+                    if (c.compareTo(' ') != 0) {
+                        spannable.setSpan(
+                            BackgroundColorSpan(Color.BLACK),
+                            index,
+                            index + 1,
+                            Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                        )
 
-                }
-                ) }
+                    }
+                    )
+        }
         textview_GuessWord.text = spannable
 
 
@@ -69,39 +71,84 @@ class WordGuessing : Fragment() {
         binding!!.buttonSpin.setOnClickListener {
             button_spin.isEnabled = false
             button_spin.isClickable = false
-            val spinWordCurrent: String = spinWords[(0 until(spinWords.size-1)).random()]
-            textView_spin_word.text = spinWordCurrent
-            button_guess.isEnabled = true
-            button_guess.isEnabled = true
+            p1.currentSpinWord = spinWords[(0 until (spinWords.size - 1)).random()]
+            textView_spin_word.text = p1.currentSpinWord
+
+            when (p1.currentSpinWord) {
+                "bankrupt" -> {
+                    p1.points = 0
+                    //p1.lives = p1.lives - 1
+                    //updateLivesText(p1)
+                    updatePointsText(p1)
+
+                    //if (p1.lives < 1) {
+                    //    loseGame()
+                    //}
+                    button_spin.isEnabled = true
+                    button_spin.isClickable = true
+                }
+                "miss turn" -> {
+                    p1.lives = p1.lives - 1
+                    updateLivesText(p1)
+
+                    if (p1.lives < 1) {
+                        loseGame()
+                    }
+                    button_spin.isEnabled = true
+                    button_spin.isClickable = true
+                }
+                "extra turn" -> {
+                    p1.lives = p1.lives + 1
+                    updateLivesText(p1)
+                    button_spin.isEnabled = true
+                    button_spin.isClickable = true
+                }
+                "1000" -> p1.pointsOnTheLine = 1000
+                "750" -> p1.pointsOnTheLine = 750
+                "600" -> p1.pointsOnTheLine = 600
+                "200" -> p1.pointsOnTheLine = 200
+            }
+            if (p1.pointsOnTheLine > 0) {
+                button_guess.isEnabled = true
+                button_guess.isEnabled = true
+            } else {
+                button_guess.isEnabled = false
+                button_guess.isEnabled = false
+            }
+
+
         }
 
         binding!!.buttonGuess.setOnClickListener {
-            button_guess.isEnabled = false
-            button_guess.isEnabled = false
-            var guessedChar = guessLetter(p1)
-            var charIsMatch = checkChar(guessedChar,guessWordCurrent,spannable)
+            if (!TextUtils.isEmpty(editTextEnterLetter.text.toString())){
+                Log.d("testfek",editTextEnterLetter.text.toString())
+                var guessedChar = guessLetter(p1)
+                var charIsMatch = checkChar(p1,guessedChar, guessWordCurrent, spannable)
 
 
-            if (charIsMatch){
-                textview_GuessWord.text = spannable
+                if (charIsMatch) {
+                    textview_GuessWord.text = spannable
 
-            } else {
-                p1.lives = p1.lives-1
-                livesText = "Current lives: " +p1.lives.toString()
-                textview_lives.text = livesText
+                } else {
+                    p1.lives = p1.lives - 1
+                    updateLivesText(p1)
+                }
+                if (p1.lives < 1) {
+                    loseGame()
+
+                }
+
+
+                // Updates text on button press
+                val listOfLettersText = "Guessed letters: " + p1.guessedLetters.joinToString()
+                textview_List_of_letters.text = listOfLettersText
+                button_spin.isEnabled = true
+                button_spin.isClickable = true
+                p1.pointsOnTheLine = 0
+                button_guess.isEnabled = false
+                button_guess.isEnabled = false
             }
-            if (p1.lives < 1) {
-                NavHostFragment.findNavController(this@WordGuessing)
-                    .navigate(R.id.action_FirstFragment_to_lose_game)
 
-            }
-
-
-            // Updates text on button press
-            val listOfLettersText = "Guessed letters: " + p1.guessedLetters.joinToString()
-            textview_List_of_letters.text = listOfLettersText
-            button_spin.isEnabled = true
-            button_spin.isClickable = true
         }
 
 
@@ -113,26 +160,28 @@ class WordGuessing : Fragment() {
      * @param Player the player currently playing the game
      *
      */
-    fun guessLetter(player: Player):Char{
+    fun guessLetter(player: Player): Char {
 
         val textInput = editTextEnterLetter.text.toString().toCharArray()[0]
 
-        if (!player.guessedLetters.contains(textInput)){
+        if (!player.guessedLetters.contains(textInput)) {
 
-        player.guessedLetters.add(textInput)
+            player.guessedLetters.add(textInput)
         }
         return textInput
     }
+
     val guessWords: ArrayList<String> = ArrayList()
-    fun addGuessWords(){
+    fun addGuessWords() {
         guessWords.add("cheesecake")
         guessWords.add("croissant")
         guessWords.add("cupcake")
         guessWords.add("muffin")
         guessWords.add("pancake")
     }
+
     val spinWords: ArrayList<String> = ArrayList()
-    fun addSpinWords(){
+    fun addSpinWords() {
         spinWords.add("extra turn")
         spinWords.add("bankrupt")
         spinWords.add("miss turn")
@@ -141,17 +190,18 @@ class WordGuessing : Fragment() {
         spinWords.add("600")
         spinWords.add("750")
     }
+
     /**
      * This function adds space between letters
      * @param guessWord the current word being guessed at
      */
-    fun guessWordsAddSpace(guessWord : String): String {
+    fun guessWordsAddSpace(guessWord: String): String {
         var returnString = ""
 
-        guessWord.forEach { letter->
-                returnString = returnString.plus("$letter ")
-                Log.d("Letter",letter.toString())
-                Log.d("Letter2",returnString)
+        guessWord.forEach { letter ->
+            returnString = returnString.plus("$letter ")
+            Log.d("Letter", letter.toString())
+            Log.d("Letter2", returnString)
         }
         return returnString
 
@@ -166,19 +216,38 @@ class WordGuessing : Fragment() {
     }
 
 
-    fun checkChar(charGuess: Char,guessWord:String,spannableWord: Spannable):Boolean{
+    fun checkChar(currentPlayer: Player,charGuess: Char, guessWord: String, spannableWord: Spannable): Boolean {
         var checkCharBool = false
-        guessWord.forEachIndexed {index, letter->
-            if (letter == charGuess){
+        guessWord.forEachIndexed { index, letter ->
+            if (letter == charGuess) {
+                currentPlayer.points=currentPlayer.points+currentPlayer.pointsOnTheLine
+                updatePointsText(currentPlayer)
                 checkCharBool = true
-                spannableWord.setSpan(BackgroundColorSpan(Color.WHITE), index, index+1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spannableWord.setSpan(
+                    BackgroundColorSpan(Color.WHITE),
+                    index,
+                    index + 1,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
 
             }
         }
-    return checkCharBool
+        return checkCharBool
     }
 
+    fun loseGame() {
+        NavHostFragment.findNavController(this@WordGuessing)
+            .navigate(R.id.action_FirstFragment_to_lose_game)
+    }
 
+    fun updateLivesText(currentPlayer: Player) {
+        var livesText = "Current lives: " + currentPlayer.lives.toString()
+        textview_lives.text = livesText
+    }
+    fun updatePointsText(currentPlayer: Player){
+        var pointsText = "Current points: " + currentPlayer.points
+        textView_total_points.text = pointsText
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

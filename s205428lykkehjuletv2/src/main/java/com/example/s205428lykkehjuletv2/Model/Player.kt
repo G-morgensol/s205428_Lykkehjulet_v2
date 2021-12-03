@@ -6,4 +6,5 @@ data class Player(val name: String) {
     val guessedLetters: ArrayList<Char> =ArrayList()
     var lives = 5
     var currentSpinWord: String = ""
+    var pointsOnTheLine: Int = 0
 }
