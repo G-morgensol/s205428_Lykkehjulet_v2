@@ -38,6 +38,8 @@ class WordGuessing : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         addGuessWords()
         addSpinWords()
+        button_guess.isEnabled = false
+        button_guess.isEnabled = false
         var guessWordCurrent: String = guessWords[(0 until (guessWords.size - 1)).random()]
         var guessWordCurrentNoSpace = guessWordCurrent
         Log.d("PreSpace", guessWordCurrent)
@@ -187,6 +189,7 @@ class WordGuessing : Fragment() {
         guessWords.add("cupcake")
         guessWords.add("muffin")
         guessWords.add("pancake")
+        guessWords.add("")
     }
 
     val spinWords: ArrayList<String> = ArrayList()
@@ -229,7 +232,9 @@ class WordGuessing : Fragment() {
         var checkCharBool = false
         guessWord.forEachIndexed { index, letter ->
             if (letter == charGuess) {
-                currentPlayer.currectlyGuessedLetters.add(letter)
+                if (!currentPlayer.guessedLetters.contains(letter)){
+                    currentPlayer.currectlyGuessedLetters.add(letter)
+                }
                 currentPlayer.points=currentPlayer.points+currentPlayer.pointsOnTheLine
                 updatePointsText(currentPlayer)
                 checkCharBool = true

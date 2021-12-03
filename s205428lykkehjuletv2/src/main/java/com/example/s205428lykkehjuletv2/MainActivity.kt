@@ -13,6 +13,11 @@ import com.example.s205428lykkehjuletv2.Model.Player
 import com.example.s205428lykkehjuletv2.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
+/**
+ *Android Studio templates used for activiy and fragments
+ *
+ *
+ */
 class MainActivity : AppCompatActivity() {
     private var appBarConfiguration: AppBarConfiguration? = null
     private var binding: ActivityMainBinding? = null
