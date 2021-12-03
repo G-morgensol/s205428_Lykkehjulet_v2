@@ -19,6 +19,7 @@ import com.example.s205428lykkehjuletv2.databinding.FragmentWordGuessingBinding
 import kotlinx.android.synthetic.main.fragment_word_guessing.*
 import java.lang.Math.random
 import java.util.*
+import kotlin.collections.ArrayList
 
 class WordGuessing : Fragment() {
     private var binding: FragmentWordGuessingBinding? = null
@@ -57,7 +58,7 @@ class WordGuessing : Fragment() {
         // https://developer.android.com/guide/topics/text/spans documentation on spans
         guessWordCurrent.forEachIndexed { index, c -> (
                 if (c.compareTo(' ')!= 0){
-                    spannable.setSpan(BackgroundColorSpan(Color.BLACK), index, index, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                    spannable.setSpan(BackgroundColorSpan(Color.BLACK), index, index+1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
                 }
                 ) }
@@ -100,6 +101,10 @@ class WordGuessing : Fragment() {
         guessWords.add("Muffin")
         guessWords.add("Pancake")
     }
+
+    /**
+     * @param guessWord
+     */
     fun guessWordsAddSpace(guessWord : String): String {
         var returnString = ""
 
@@ -119,6 +124,21 @@ class WordGuessing : Fragment() {
 
          */
     }
+    fun checkChar(charGuess: Char,guessWord:String): ArrayList<Int> {
+
+        val returnArray = ArrayList<Int>()
+
+        guessWord.forEachIndexed {index, letter->
+            if (letter == charGuess){
+                returnArray.add(index)
+
+            }
+        }
+    return returnArray
+    }
+
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
