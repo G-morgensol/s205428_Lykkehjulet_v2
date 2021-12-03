@@ -18,6 +18,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.s205428lykkehjuletv2.Model.Player
 import com.example.s205428lykkehjuletv2.databinding.FragmentWordGuessingBinding
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.fragment_win_game.*
 import kotlinx.android.synthetic.main.fragment_word_guessing.*
 import java.lang.Math.random
 import java.util.*
@@ -38,7 +39,7 @@ class WordGuessing : Fragment() {
         addGuessWords()
         addSpinWords()
         var guessWordCurrent: String = guessWords[(0 until (guessWords.size - 1)).random()]
-
+        var guessWordCurrentNoSpace = guessWordCurrent
         Log.d("PreSpace", guessWordCurrent)
         guessWordCurrent = guessWordsAddSpace(guessWordCurrent)
         textview_GuessWord.text = guessWordCurrent
@@ -147,6 +148,16 @@ class WordGuessing : Fragment() {
                 p1.pointsOnTheLine = 0
                 button_guess.isEnabled = false
                 button_guess.isEnabled = false
+                if (p1.currectlyGuessedLetters.size==guessWordCurrentNoSpace.length){
+                    //Game won
+                    var totalPointsMsg = "You got a total of: " + p1.points + "!"
+                    textView_points_won.text = totalPointsMsg
+
+                    NavHostFragment.findNavController(this@WordGuessing)
+                        .navigate(R.id.action_FirstFragment_to_winGame)
+
+
+                }
             }
 
         }
@@ -220,6 +231,7 @@ class WordGuessing : Fragment() {
         var checkCharBool = false
         guessWord.forEachIndexed { index, letter ->
             if (letter == charGuess) {
+                currentPlayer.currectlyGuessedLetters.add(letter)
                 currentPlayer.points=currentPlayer.points+currentPlayer.pointsOnTheLine
                 updatePointsText(currentPlayer)
                 checkCharBool = true

@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_lose_game"
             app:destination="@id/lose_game" />
+        <action
+            android:id="@+id/action_FirstFragment_to_winGame"
+            app:destination="@id/winGame" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -37,4 +40,9 @@
             android:id="@+id/action_lose_game_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/winGame"
+        android:name="com.example.s205428lykkehjuletv2.WinGame"
+        android:label="fragment_win_game"
+        tools:layout="@layout/fragment_win_game" />
 </navigation>
