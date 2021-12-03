@@ -41,7 +41,7 @@ class WordGuessing : Fragment() {
         textview_GuessWord.text = guessWordCurrent
 
         val p1 = Player("player")
-        val livesText = "Current lives: " +p1.lives.toString()
+        var livesText = "Current lives: " +p1.lives.toString()
         textview_lives.text = livesText
 
 
@@ -51,8 +51,6 @@ class WordGuessing : Fragment() {
 
         val spannable = SpannableStringBuilder(guessWordCurrent)
 
-        //spannable.setSpan(BackgroundColorSpan(Color.WHITE), 8, 12, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-        //spannable.setSpan(UnderlineSpan(),0,12,0)
 
 
         // https://developer.android.com/guide/topics/text/spans documentation on spans
@@ -71,7 +69,23 @@ class WordGuessing : Fragment() {
         }
 
         binding!!.buttonGuess.setOnClickListener {
-            guessLetter(p1)
+            var guessedChar = guessLetter(p1)
+            var charIsMatch = checkChar(guessedChar,guessWordCurrent,spannable)
+
+            if (charIsMatch){
+                textview_GuessWord.text = spannable
+
+            } else {
+                p1.lives = p1.lives-1
+                livesText = "Current lives: " +p1.lives.toString()
+                textview_lives.text = livesText
+            }
+            if (p1.lives < 1) {
+                NavHostFragment.findNavController(this@WordGuessing)
+                    .navigate(R.id.action_FirstFragment_to_lose_game)
+            }
+
+
             // Updates text on button press
             val listOfLettersText = "Guessed letters: " + p1.guessedLetters.joinToString()
             textview_List_of_letters.text = listOfLettersText
@@ -87,11 +101,14 @@ class WordGuessing : Fragment() {
      * @param Player the player currently playing the game
      *
      */
-    fun guessLetter(player: Player){
+    fun guessLetter(player: Player):Char{
 
         val textInput = editTextEnterLetter.text.toString().toCharArray()[0]
-        player.guessedLetters.add(textInput)
+        if (!player.guessedLetters.contains(textInput)){
 
+        player.guessedLetters.add(textInput)
+        }
+        return textInput
     }
     val guessWords: ArrayList<String> = ArrayList()
     fun addGuessWords(){
@@ -103,7 +120,8 @@ class WordGuessing : Fragment() {
     }
 
     /**
-     * @param guessWord
+     * This function adds space between letters
+     * @param guessWord the current word being guessed at
      */
     fun guessWordsAddSpace(guessWord : String): String {
         var returnString = ""
@@ -124,19 +142,17 @@ class WordGuessing : Fragment() {
 
          */
     }
-    fun checkChar(charGuess: Char,guessWord:String): ArrayList<Int> {
-
-        val returnArray = ArrayList<Int>()
-
+    fun checkChar(charGuess: Char,guessWord:String,spannableWord: Spannable):Boolean{
+        var checkCharBool = false
         guessWord.forEachIndexed {index, letter->
             if (letter == charGuess){
-                returnArray.add(index)
+                checkCharBool = true
+                spannableWord.setSpan(BackgroundColorSpan(Color.WHITE), index, index+1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
             }
         }
-    return returnArray
+    return checkCharBool
     }
-
 
 
 

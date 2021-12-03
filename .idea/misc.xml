@@ -14,8 +14,10 @@
         <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/activity_main.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/content_main.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/fragment_first.xml" value="0.20104166666666667" />
+        <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/fragment_lose_game.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/fragment_second.xml" value="0.20104166666666667" />
         <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/fragment_word_guessing.xml" value="0.31875" />
+        <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/layout/gragment_lose_game.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/Gusta/AndroidStudioProjects/s205428_Lykkehjulet_v2/s205428lykkehjuletv2/src/main/res/menu/menu_main.xml" value="0.20104166666666667" />
       </map>
     </option>
