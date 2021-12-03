@@ -24,26 +24,30 @@ class WordGuessing : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val p1 = Player("player")
+        val livesText = "Current lives: " +p1.lives.toString()
+        textview_lives.text = livesText
+
+
+
+
         binding!!.buttonFirst.setOnClickListener {
             NavHostFragment.findNavController(this@WordGuessing)
                 .navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
         binding!!.buttonGuess.setOnClickListener {
-            guessLetter()
+            guessLetter(p1)
         }
 
 
-        val p1 = Player("player")
-        val livesText = "Current lives: " +p1.lives.toString()
-        textview_lives.text = livesText
-        //val editText = editTextEnterLetter.editableText
-        //Test
-
-
-
         }
-    fun guessLetter(){
-        val character = readLine()!![0]
+
+    fun guessLetter(player: Player){
+
+        val textInput = editTextEnterLetter.text.toString().toCharArray()[0]
+        player.guessedLetters.add(textInput)
+
     }
 
     override fun onDestroyView() {
