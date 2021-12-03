@@ -67,14 +67,20 @@ class WordGuessing : Fragment() {
 
 
         binding!!.buttonSpin.setOnClickListener {
-
+            button_spin.isEnabled = false
+            button_spin.isClickable = false
             val spinWordCurrent: String = spinWords[(0 until(spinWords.size-1)).random()]
             textView_spin_word.text = spinWordCurrent
+            button_guess.isEnabled = true
+            button_guess.isEnabled = true
         }
 
         binding!!.buttonGuess.setOnClickListener {
+            button_guess.isEnabled = false
+            button_guess.isEnabled = false
             var guessedChar = guessLetter(p1)
             var charIsMatch = checkChar(guessedChar,guessWordCurrent,spannable)
+
 
             if (charIsMatch){
                 textview_GuessWord.text = spannable
@@ -87,13 +93,15 @@ class WordGuessing : Fragment() {
             if (p1.lives < 1) {
                 NavHostFragment.findNavController(this@WordGuessing)
                     .navigate(R.id.action_FirstFragment_to_lose_game)
+
             }
 
 
             // Updates text on button press
             val listOfLettersText = "Guessed letters: " + p1.guessedLetters.joinToString()
             textview_List_of_letters.text = listOfLettersText
-
+            button_spin.isEnabled = true
+            button_spin.isClickable = true
         }
 
 
@@ -108,6 +116,7 @@ class WordGuessing : Fragment() {
     fun guessLetter(player: Player):Char{
 
         val textInput = editTextEnterLetter.text.toString().toCharArray()[0]
+
         if (!player.guessedLetters.contains(textInput)){
 
         player.guessedLetters.add(textInput)
@@ -155,6 +164,8 @@ class WordGuessing : Fragment() {
 
          */
     }
+
+
     fun checkChar(charGuess: Char,guessWord:String,spannableWord: Spannable):Boolean{
         var checkCharBool = false
         guessWord.forEachIndexed {index, letter->
