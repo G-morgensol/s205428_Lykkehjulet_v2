@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.example.s205428lykkehjuletv2.Model.Player
 import com.example.s205428lykkehjuletv2.databinding.FragmentWordGuessingBinding
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.fragment_word_guessing.*
 import java.lang.Math.random
 import java.util.*
@@ -34,6 +35,7 @@ class WordGuessing : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addGuessWords()
+        addSpinWords()
         var guessWordCurrent: String = guessWords[(0 until (guessWords.size-1)).random()]
 
         Log.d("PreSpace",guessWordCurrent)
@@ -63,9 +65,11 @@ class WordGuessing : Fragment() {
         textview_GuessWord.text = spannable
 
 
-        binding!!.buttonFirst.setOnClickListener {
-            NavHostFragment.findNavController(this@WordGuessing)
-                .navigate(R.id.action_FirstFragment_to_SecondFragment)
+
+        binding!!.buttonSpin.setOnClickListener {
+
+            val spinWordCurrent: String = spinWords[(0 until(spinWords.size-1)).random()]
+            textView_spin_word.text = spinWordCurrent
         }
 
         binding!!.buttonGuess.setOnClickListener {
@@ -112,13 +116,22 @@ class WordGuessing : Fragment() {
     }
     val guessWords: ArrayList<String> = ArrayList()
     fun addGuessWords(){
-        guessWords.add("Cheesecake")
-        guessWords.add("Croissant")
-        guessWords.add("Cupcake")
-        guessWords.add("Muffin")
-        guessWords.add("Pancake")
+        guessWords.add("cheesecake")
+        guessWords.add("croissant")
+        guessWords.add("cupcake")
+        guessWords.add("muffin")
+        guessWords.add("pancake")
     }
-
+    val spinWords: ArrayList<String> = ArrayList()
+    fun addSpinWords(){
+        spinWords.add("extra turn")
+        spinWords.add("bankrupt")
+        spinWords.add("miss turn")
+        spinWords.add("1000")
+        spinWords.add("200")
+        spinWords.add("600")
+        spinWords.add("750")
+    }
     /**
      * This function adds space between letters
      * @param guessWord the current word being guessed at

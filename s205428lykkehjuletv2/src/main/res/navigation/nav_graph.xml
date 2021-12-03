@@ -32,5 +32,9 @@
         android:id="@+id/lose_game"
         android:name="com.example.s205428lykkehjuletv2.lose_game"
         android:label="fragment_lose_game"
-        tools:layout="@layout/fragment_lose_game" />
+        tools:layout="@layout/fragment_lose_game" >
+        <action
+            android:id="@+id/action_lose_game_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
 </navigation>
