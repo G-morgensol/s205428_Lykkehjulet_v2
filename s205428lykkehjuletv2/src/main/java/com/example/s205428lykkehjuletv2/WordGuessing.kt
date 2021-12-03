@@ -150,8 +150,6 @@ class WordGuessing : Fragment() {
                 button_guess.isEnabled = false
                 if (p1.currectlyGuessedLetters.size==guessWordCurrentNoSpace.length){
                     //Game won
-                    var totalPointsMsg = "You got a total of: " + p1.points + "!"
-                    textView_points_won.text = totalPointsMsg
 
                     NavHostFragment.findNavController(this@WordGuessing)
                         .navigate(R.id.action_FirstFragment_to_winGame)
